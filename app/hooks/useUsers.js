@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export function useUsers(initialParams = {}) {
   const [users, setUsers] = useState([]);
@@ -24,6 +24,10 @@ export function useUsers(initialParams = {}) {
     search: initialParams.search || "",
     all: initialParams.all || false,
   });
+
+  // Debounced search: immediate input state + delayed params update
+  const [searchInput, setSearchInput] = useState(params.search);
+  const searchTimer = useRef(null);
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
@@ -56,6 +60,13 @@ export function useUsers(initialParams = {}) {
     fetchUsers();
   }, [fetchUsers]);
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimer.current) clearTimeout(searchTimer.current);
+    };
+  }, []);
+
   const setPage = (p) => setParams((prev) => ({ ...prev, page: p }));
   const setLimit = (l) => setParams((prev) => ({ ...prev, limit: l, page: 1 }));
   const setSort = (field) => {
@@ -67,7 +78,14 @@ export function useUsers(initialParams = {}) {
     }));
   };
   const setRole = (r) => setParams((prev) => ({ ...prev, role: r, page: 1 }));
-  const setSearch = (q) => setParams((prev) => ({ ...prev, search: q, page: 1 }));
+
+  const setSearch = (q) => {
+    setSearchInput(q);
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => {
+      setParams((prev) => ({ ...prev, search: q, page: 1 }));
+    }, 400);
+  };
 
   const addUser = () => {
     fetchUsers();
@@ -78,6 +96,7 @@ export function useUsers(initialParams = {}) {
     pagination,
     loading,
     params,
+    searchInput,
     setPage,
     setLimit,
     setSort,

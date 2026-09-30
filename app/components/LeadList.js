@@ -1,4 +1,5 @@
 "use client";
+import Spinner from "./Spinner";
 import Link from "next/link";
 import StatusBadge from "./StatusBadge";
 
@@ -36,7 +37,7 @@ export default function LeadList({
 
   const currentStatus = params.status || "ALL";
   const isUnassigned = params.unassigned || false;
-  const currentSearch = params.search || "";
+  const currentSearch = hook ? (hook.searchInput ?? params.search) : (params.search || "");
   const currentSort = params.sortBy || "createdAt";
   const sortOrder = params.sortOrder || "desc";
 
@@ -93,7 +94,7 @@ export default function LeadList({
 
       {loading ? (
         <div className="card empty-state" style={{ padding: "2.5rem 1rem" }}>
-          Loading deals from database…
+          <Spinner label="Loading deals…" />
         </div>
       ) : leads.length === 0 ? (
         <div className="card empty-state" style={{ padding: "2.5rem 1rem" }}>

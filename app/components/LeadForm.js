@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ErrorAlert from "./ErrorAlert";
+import Spinner from "./Spinner";
 
 export default function LeadForm({ onCreated }) {
   const [form, setForm] = useState({ title: "", revenue: "" });
@@ -45,7 +46,7 @@ export default function LeadForm({ onCreated }) {
             onChange={set("revenue")} required placeholder="100000" />
         </div>
         <button id="create-lead-btn" className="btn btn-primary" disabled={loading} type="submit">
-          {loading ? "Creating…" : "+ Create Lead"}
+          {loading ? <><Spinner size="sm" inline /> Creating…</> : "+ Create Lead"}
         </button>
       </form>
     </div>

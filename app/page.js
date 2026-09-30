@@ -3,6 +3,7 @@ import { useUsers } from "./hooks/useUsers";
 import { useLeads } from "./hooks/useLeads";
 import Link from "next/link";
 import StatusBadge from "./components/StatusBadge";
+import Spinner from "./components/Spinner";
 
 export default function Dashboard() {
   const { users, loading: usersLoading } = useUsers();
@@ -54,7 +55,7 @@ export default function Dashboard() {
             <span className="stat-label">Team Members</span>
             <span className="badge badge-role">Team</span>
           </div>
-          <div className="stat-value">{usersLoading ? "…" : users.length}</div>
+          <div className="stat-value">{usersLoading ? <Spinner size="sm" inline /> : users.length}</div>
           <div className="stat-sub">
             {agentsCount} Agents · {managersCount} Managers
           </div>
@@ -67,7 +68,7 @@ export default function Dashboard() {
             <span className="badge badge-open">Open</span>
           </div>
           <div className="stat-value" style={{ color: "var(--accent-green)" }}>
-            {leadsLoading ? "…" : openLeads.length}
+            {leadsLoading ? <Spinner size="sm" inline /> : openLeads.length}
           </div>
           <div className="stat-sub">
             ₹{pipelineRevenue.toLocaleString()} in progress
@@ -81,7 +82,7 @@ export default function Dashboard() {
             <span className="badge badge-closed">Settled</span>
           </div>
           <div className="stat-value" style={{ color: "#a5b4fc" }}>
-            {leadsLoading ? "…" : closedLeads.length}
+            {leadsLoading ? <Spinner size="sm" inline /> : closedLeads.length}
           </div>
           <div className="stat-sub">
             ₹{totalClosedRevenue.toLocaleString()} total revenue
@@ -110,7 +111,7 @@ export default function Dashboard() {
             className="stat-value"
             style={{ color: unassignedLeads.length > 0 ? "var(--accent-amber)" : "var(--text-primary)" }}
           >
-            {leadsLoading ? "…" : unassignedLeads.length}
+            {leadsLoading ? <Spinner size="sm" inline /> : unassignedLeads.length}
           </div>
           <div className="stat-sub" style={{ color: unassignedLeads.length > 0 ? "var(--accent-amber)" : "var(--text-secondary)" }}>
             {unassignedLeads.length > 0
@@ -250,7 +251,7 @@ export default function Dashboard() {
         </div>
 
         {leadsLoading ? (
-          <div className="empty-state">Loading leads pipeline…</div>
+          <div className="empty-state"><Spinner label="Loading leads pipeline…" /></div>
         ) : leads.length === 0 ? (
           <div className="empty-state">No leads created yet. Click "+ New Lead" to get started.</div>
         ) : (

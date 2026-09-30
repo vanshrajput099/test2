@@ -270,6 +270,53 @@ tbody tr:hover { background: var(--bg-card-hover); }
 /* Empty states */
 .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--text-muted); }
 
+/* ─── Spinner ─── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem 0;
+}
+
+.spinner-circle {
+  display: block;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin 0.7s linear infinite;
+}
+
+/* Sizes */
+.spinner-sm  .spinner-circle { width: 16px; height: 16px; border-width: 2px; }
+.spinner-md  .spinner-circle { width: 28px; height: 28px; border-width: 3px; }
+.spinner-lg  .spinner-circle { width: 40px; height: 40px; border-width: 3.5px; }
+
+/* Inline variant (for buttons) */
+.spinner-inline {
+  display: inline-flex;
+  flex-direction: row;
+  padding: 0;
+  gap: 0.45rem;
+  align-items: center;
+}
+.spinner-inline .spinner-circle {
+  border-top-color: currentColor;
+}
+
+/* Label beneath the spinner */
+.spinner-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
 /* Page specific responsive layouts */
 .leads-page-layout,
 .users-page-layout {

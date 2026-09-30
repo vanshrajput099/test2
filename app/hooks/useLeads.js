@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export function useLeads(initialParams = {}) {
   const [leads, setLeads] = useState([]);
@@ -25,6 +25,10 @@ export function useLeads(initialParams = {}) {
     unassigned: initialParams.unassigned || false,
     all: initialParams.all || false,
   });
+
+  // Debounced search: immediate input state + delayed params update
+  const [searchInput, setSearchInput] = useState(params.search);
+  const searchTimer = useRef(null);
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -58,6 +62,13 @@ export function useLeads(initialParams = {}) {
     fetchLeads();
   }, [fetchLeads]);
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimer.current) clearTimeout(searchTimer.current);
+    };
+  }, []);
+
   const setPage = (p) => setParams((prev) => ({ ...prev, page: p }));
   const setLimit = (l) => setParams((prev) => ({ ...prev, limit: l, page: 1 }));
   const setSort = (field) => {
@@ -70,7 +81,14 @@ export function useLeads(initialParams = {}) {
   };
   const setStatus = (s) => setParams((prev) => ({ ...prev, status: s, unassigned: false, page: 1 }));
   const setUnassigned = (u) => setParams((prev) => ({ ...prev, unassigned: u, status: "OPEN", page: 1 }));
-  const setSearch = (q) => setParams((prev) => ({ ...prev, search: q, page: 1 }));
+
+  const setSearch = (q) => {
+    setSearchInput(q);
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => {
+      setParams((prev) => ({ ...prev, search: q, page: 1 }));
+    }, 400);
+  };
 
   const addLead = () => {
     fetchLeads();
@@ -85,6 +103,7 @@ export function useLeads(initialParams = {}) {
     pagination,
     loading,
     params,
+    searchInput,
     setPage,
     setLimit,
     setSort,

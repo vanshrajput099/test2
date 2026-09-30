@@ -3,6 +3,7 @@ import { useState } from "react";
 import StatusBadge from "./StatusBadge";
 import CommissionBreakdown from "./CommissionBreakdown";
 import ErrorAlert from "./ErrorAlert";
+import Spinner from "./Spinner";
 
 function computeProjection(revenueNum, user) {
   if (!user || !revenueNum) return null;
@@ -170,7 +171,7 @@ export default function LeadDetail({ lead: initial, users = [] }) {
               onClick={assign}
               disabled={!selectedUserId || loading === "assign" || selectedUserId === lead.assignment?.userId}
             >
-              {loading === "assign" ? "Saving…" : isAssigned ? "Reassign User" : "Assign User"}
+              {loading === "assign" ? <><Spinner size="sm" inline /> Saving…</> : isAssigned ? "Reassign User" : "Assign User"}
             </button>
             {isAssigned && (
               <button
@@ -180,7 +181,7 @@ export default function LeadDetail({ lead: initial, users = [] }) {
                 disabled={loading === "close"}
                 style={{ padding: "0.65rem 1.4rem", fontWeight: 600 }}
               >
-                {loading === "close" ? "Closing Lead…" : "✓ Mark Closed & Distribute Commission"}
+                {loading === "close" ? <><Spinner size="sm" inline /> Closing Lead…</> : "✓ Mark Closed & Distribute Commission"}
               </button>
             )}
           </div>

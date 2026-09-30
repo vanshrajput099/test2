@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ErrorAlert from "./ErrorAlert";
+import Spinner from "./Spinner";
 
 export default function UserForm({ users, onCreated }) {
   const [form, setForm] = useState({ name: "", email: "", role: "AGENT", managerId: "" });
@@ -140,7 +141,7 @@ export default function UserForm({ users, onCreated }) {
         )}
 
         <button id="create-user-btn" className="btn btn-primary" disabled={loading} type="submit">
-          {loading ? "Creating…" : "+ Create User"}
+          {loading ? <><Spinner size="sm" inline /> Creating…</> : "+ Create User"}
         </button>
       </form>
     </div>

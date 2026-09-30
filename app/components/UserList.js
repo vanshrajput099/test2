@@ -1,4 +1,5 @@
 "use client";
+import Spinner from "./Spinner";
 
 function SortHeader({ field, label, currentSort, sortOrder, onSort }) {
   const active = currentSort === field;
@@ -33,7 +34,7 @@ export default function UserList({
   const params = hook ? hook.params : { role: "ALL", search: "", sortBy: "createdAt", sortOrder: "desc" };
 
   const currentRole = params.role || "ALL";
-  const currentSearch = params.search || "";
+  const currentSearch = hook ? (hook.searchInput ?? params.search) : (params.search || "");
   const currentSort = params.sortBy || "createdAt";
   const sortOrder = params.sortOrder || "desc";
 
@@ -78,7 +79,7 @@ export default function UserList({
 
       {loading ? (
         <div className="card empty-state" style={{ padding: "2.5rem 1rem" }}>
-          Loading team members from database…
+          <Spinner label="Loading team members…" />
         </div>
       ) : users.length === 0 ? (
         <div className="card empty-state" style={{ padding: "2.5rem 1rem" }}>
